@@ -29,12 +29,14 @@ const createLocalTheme = function <TLocalTheme extends object, TGlobalThemeConte
     get: GetFunction<TLocalTheme>;
   } {
   let localTheme: TLocalTheme | null = null;
+  let renderedForVariant: InferVariants<TGlobalThemeContext> | null = null;
 
   const getLocalTheme = (): TLocalTheme => {
-    if (!localTheme) {
-      const { theme, variant } = useContext(globalTheme);
+    const { theme, variant } = useContext(globalTheme);
 
+    if (!localTheme || variant !== renderedForVariant) {
       localTheme = themeFactory({ theme, variant });
+      renderedForVariant = variant;
     }
 
     return localTheme;
