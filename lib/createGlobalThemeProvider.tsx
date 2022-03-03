@@ -6,7 +6,7 @@ const createGlobalThemeProvider = function <TVariants extends string, TGlobalThe
   defaultVariant
 }: {
   themes: Record<TVariants, TGlobalTheme>;
-  variants: TVariants[];
+  variants: readonly TVariants[];
   defaultVariant: TVariants;
 }): {
     GlobalThemeProvider: FunctionComponent;
