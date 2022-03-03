@@ -6,7 +6,7 @@ Application-wide theming with component-level isolation for styled-components.
 
 | Category         | Status                                                                                                      |
 | ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| Version          | [![npm](https://img.shields.io/npm/v/@nhummel/styled-components-theming)](https://www.npmjs.com/package/@nhummel/styled-components-themingt)     |
+| Version          | [![npm](https://img.shields.io/npm/v/@nhummel/styled-components-theming)](https://www.npmjs.com/package/@nhummel/styled-components-theming)     |
 | Build            | ![GitHub Actions](https://github.com/strangedev/styled-components-theming/workflows/Release/badge.svg?branch=main) |
 | License          | ![GitHub](https://img.shields.io/github/license/strangedev/styled-components-theming)                              |
 
