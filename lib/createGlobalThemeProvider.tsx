@@ -10,10 +10,10 @@ const createGlobalThemeProvider = function <TVariants extends string, TGlobalThe
   defaultVariant: TVariants;
 }): {
     GlobalThemeProvider: FunctionComponent;
-    globalTheme: Context<GlobalThemeContext<TVariants, TGlobalTheme>>;
+    globalThemeContext: Context<GlobalThemeContext<TVariants, TGlobalTheme>>;
     useTheme: () => GlobalThemeContext<TVariants, TGlobalTheme>;
   } {
-  const context = getGlobalThemeContext({ themes, defaultVariant });
+  const globalThemeContext = getGlobalThemeContext({ themes, defaultVariant });
 
   const GlobalThemeProvider: FunctionComponent = ({ children }) => {
     const [ value, setValue ] = useState<GlobalThemeContext<TVariants, TGlobalTheme>>({
@@ -31,16 +31,16 @@ const createGlobalThemeProvider = function <TVariants extends string, TGlobalThe
 
     return (
 
-      <context.Provider value={ value }>
+      <globalThemeContext.Provider value={ value }>
         { children }
-      </context.Provider>
+      </globalThemeContext.Provider>
     );
   };
 
   return {
     GlobalThemeProvider,
-    globalTheme: context,
-    useTheme: (): GlobalThemeContext<TVariants, TGlobalTheme> => useContext(context)
+    globalThemeContext,
+    useTheme: (): GlobalThemeContext<TVariants, TGlobalTheme> => useContext(globalThemeContext)
   };
 };
 

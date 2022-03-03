@@ -30,10 +30,10 @@ suite('Component tests', (): void => {
   });
 
   test('styles styled-components isolated from each other.', async (): Promise<void> => {
-    const { globalTheme, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
-    const { get: getOne } = createLocalTheme({
-      globalTheme,
-      themeFactory ({ theme, variant }) {
+    const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+    const { from: fromOne } = createLocalTheme({
+      globalThemeContext,
+      factory ({ theme, variant }) {
         const { brandColor, background } = theme;
         let { color } = theme;
 
@@ -50,14 +50,14 @@ suite('Component tests', (): void => {
     });
 
     const Banner = styled.div`
-      color: ${getOne(theme => theme.color)};
-      background-color: ${getOne(theme => theme.background)};
-      padding: ${getOne(theme => theme.padding)};
+      color: ${fromOne(theme => theme.color)};
+      background-color: ${fromOne(theme => theme.background)};
+      padding: ${fromOne(theme => theme.padding)};
     `;
 
-    const { get: getTwo } = createLocalTheme({
-      globalTheme,
-      themeFactory ({ theme }) {
+    const { from: fromTwo } = createLocalTheme({
+      globalThemeContext,
+      factory ({ theme }) {
         return {
           marginLeft: theme.space(16)
         };
@@ -65,7 +65,7 @@ suite('Component tests', (): void => {
     });
 
     const Logo = styled.div`
-      margin-left: ${getTwo(theme => theme.marginLeft)};
+      margin-left: ${fromTwo(theme => theme.marginLeft)};
     `;
 
     render((
@@ -92,10 +92,10 @@ suite('Component tests', (): void => {
   });
   suite('useTheme hook', (): void => {
     test('can be used to switch the variant, re-rendering the component.', async (): Promise<void> => {
-      const { globalTheme, GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
-      const { get } = createLocalTheme({
-        globalTheme,
-        themeFactory ({ theme, variant }) {
+      const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
+      const { from } = createLocalTheme({
+        globalThemeContext,
+        factory ({ theme, variant }) {
           const { brandColor, background } = theme;
           let { color } = theme;
 
@@ -112,9 +112,9 @@ suite('Component tests', (): void => {
       });
 
       const Banner = styled.div`
-        color: ${get(theme => theme.color)};
-        background-color: ${get(theme => theme.background)};
-        padding: ${get(theme => theme.padding)};
+        color: ${from(theme => theme.color)};
+        background-color: ${from(theme => theme.background)};
+        padding: ${from(theme => theme.padding)};
       `;
 
       const ThemeSwitch: FunctionComponent = () => {
@@ -251,10 +251,10 @@ suite('Component tests', (): void => {
   });
   suite('createLocalTheme', (): void => {
     test('the theme factory can be a function with arbitrary logic.', async (): Promise<void> => {
-      const { globalTheme, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
-      const { get } = createLocalTheme({
-        globalTheme,
-        themeFactory ({ theme, variant }) {
+      const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+      const { from } = createLocalTheme({
+        globalThemeContext,
+        factory ({ theme, variant }) {
           const { brandColor, background } = theme;
           let { color } = theme;
 
@@ -271,9 +271,9 @@ suite('Component tests', (): void => {
       });
 
       const Banner = styled.div`
-        color: ${get(theme => theme.color)};
-        background-color: ${get(theme => theme.background)};
-        padding: ${get(theme => theme.padding)};
+        color: ${from(theme => theme.color)};
+        background-color: ${from(theme => theme.background)};
+        padding: ${from(theme => theme.padding)};
       `;
 
       render((
@@ -294,10 +294,10 @@ suite('Component tests', (): void => {
     });
     suite('get function', (): void => {
       test('allows access to values in the local theme.', async (): Promise<void> => {
-        const { globalTheme, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
-        const { get } = createLocalTheme({
-          globalTheme,
-          themeFactory ({ theme, variant }) {
+        const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+        const { from } = createLocalTheme({
+          globalThemeContext,
+          factory ({ theme, variant }) {
             const { brandColor, background } = theme;
             let { color } = theme;
 
@@ -314,9 +314,9 @@ suite('Component tests', (): void => {
         });
 
         const Banner = styled.div`
-          color: ${get(theme => theme.color)};
-          background-color: ${get(theme => theme.background)};
-          padding: ${get(theme => theme.padding)};
+          color: ${from(theme => theme.color)};
+          background-color: ${from(theme => theme.background)};
+          padding: ${from(theme => theme.padding)};
         `;
 
         render((
@@ -336,10 +336,10 @@ suite('Component tests', (): void => {
         });
       });
       test('allows access to functions in the local theme.', async (): Promise<void> => {
-        const { globalTheme, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
-        const { get } = createLocalTheme({
-          globalTheme,
-          themeFactory ({ theme, variant }) {
+        const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+        const { from } = createLocalTheme({
+          globalThemeContext,
+          factory ({ theme, variant }) {
             const { brandColor, background, space } = theme;
             let { color } = theme;
 
@@ -356,9 +356,9 @@ suite('Component tests', (): void => {
         });
 
         const Banner = styled.div`
-          color: ${get(theme => theme.color)};
-          background-color: ${get(theme => theme.background)};
-          padding: ${get(theme => theme.padding(3))};
+          color: ${from(theme => theme.color)};
+          background-color: ${from(theme => theme.background)};
+          padding: ${from(theme => theme.padding(3))};
         `;
 
         render((

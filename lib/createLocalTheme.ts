@@ -1,52 +1,42 @@
 import { GlobalThemeContext } from './GlobalThemeContext';
+import { InferGlobalTheme } from './InferGlobalTheme';
+import { InferVariants } from './InferVariants';
 import { Stringlike } from '@nhummel/css-in-js';
+import { ThemeFactory } from './ThemeFactory';
 import { Context, useContext } from 'react';
-
-interface ThemeFactoryArgs<TVariants, TGlobalTheme> {
-  theme: TGlobalTheme;
-  variant: TVariants;
-}
-
-type ThemeFactory<TLocalTheme, TVariants, TGlobalTheme> =
-  (args: ThemeFactoryArgs<TVariants, TGlobalTheme>) => TLocalTheme;
 
 type Getter<TLocalTheme> = (theme: TLocalTheme) => Stringlike;
 type ContextDependentFuture = () => string;
-type GetFunction<TLocalTheme> = (getter: Getter<TLocalTheme>) => ContextDependentFuture;
-
-type InferVariants<TGlobalThemeContext> = TGlobalThemeContext extends Context<GlobalThemeContext<infer TVariants, any>> ?
-  TVariants : never;
-type InferGlobalTheme<TGlobalThemeContext> = TGlobalThemeContext extends Context<GlobalThemeContext<any, infer TGlobalTheme>> ?
-  TGlobalTheme : never;
+type FromFunction<TLocalTheme> = (getter: Getter<TLocalTheme>) => ContextDependentFuture;
 
 const createLocalTheme = function <TLocalTheme extends object, TGlobalThemeContext extends Context<GlobalThemeContext<any, any>>> ({
-  globalTheme,
-  themeFactory
+  globalThemeContext,
+  factory
 }: {
-  globalTheme: TGlobalThemeContext;
-  themeFactory: ThemeFactory<TLocalTheme, InferVariants<TGlobalThemeContext>, InferGlobalTheme<TGlobalThemeContext>>;
+  globalThemeContext: TGlobalThemeContext;
+  factory: ThemeFactory<TLocalTheme, InferVariants<TGlobalThemeContext>, InferGlobalTheme<TGlobalThemeContext>>;
 }): {
-    get: GetFunction<TLocalTheme>;
+    from: FromFunction<TLocalTheme>;
   } {
   let localTheme: TLocalTheme | null = null;
   let renderedForVariant: InferVariants<TGlobalThemeContext> | null = null;
 
   const getLocalTheme = (): TLocalTheme => {
-    const { theme, variant } = useContext(globalTheme);
+    const { theme, variant } = useContext(globalThemeContext);
 
     if (!localTheme || variant !== renderedForVariant) {
-      localTheme = themeFactory({ theme, variant });
+      localTheme = factory({ theme, variant });
       renderedForVariant = variant;
     }
 
     return localTheme;
   };
 
-  const get = (getter: Getter<TLocalTheme>): ContextDependentFuture =>
+  const from = (getter: Getter<TLocalTheme>): ContextDependentFuture =>
     (): string =>
       `${getter(getLocalTheme())}`;
 
-  return { get };
+  return { from };
 };
 
 export {

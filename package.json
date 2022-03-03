@@ -1,7 +1,7 @@
 {
   "name": "@nhummel/styled-components-theming",
   "version": "0.1.0",
-  "description": "Isolated theming for styled-components.",
+  "description": "Application-wide theming with component-level isolation for styled-components.",
   "contributors": [
     {
       "name": "Noah Hummel",
