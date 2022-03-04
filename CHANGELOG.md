@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/strangedev/styled-components-theming/compare/3.1.0...3.2.0) (2022-03-04)
+
+
+### Features
+
+* add createGlobalStyle function ([#7](https://github.com/strangedev/styled-components-theming/issues/7)) ([00068ae](https://github.com/strangedev/styled-components-theming/commit/00068aef71794f004162ee2bc495e9b9e026fda1))
+
 # [3.1.0](https://github.com/strangedev/styled-components-theming/compare/3.0.0...3.1.0) (2022-03-04)
 
 
