@@ -1,7 +1,7 @@
 import { assert } from 'assertthat';
 import styled from 'styled-components';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
-import { createGlobalThemeProvider, createLocalTheme } from '../../lib';
+import { createGlobalTheme, createLocalTheme } from '../../lib';
 import { Length, px } from '@nhummel/css-in-js';
 import React, { FunctionComponent } from 'react';
 
@@ -30,7 +30,7 @@ suite('Component tests', (): void => {
   });
 
   test('styles styled-components isolated from each other.', async (): Promise<void> => {
-    const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+    const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
     const { from: fromOne } = createLocalTheme({
       globalThemeContext,
       factory ({ globalTheme, variant }) {
@@ -92,7 +92,7 @@ suite('Component tests', (): void => {
   });
   suite('useTheme hook', (): void => {
     test('can be used to switch the variant, re-rendering the component.', async (): Promise<void> => {
-      const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
+      const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalTheme(configuration);
       const { from } = createLocalTheme({
         globalThemeContext,
         factory ({ globalTheme, variant }) {
@@ -168,7 +168,7 @@ suite('Component tests', (): void => {
       });
     });
     test('can be used to obtain the available variants.', async (): Promise<void> => {
-      const { GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
+      const { GlobalThemeProvider, useTheme } = createGlobalTheme(configuration);
 
       const Dummy: FunctionComponent = () => {
         const { availableVariants } = useTheme();
@@ -195,7 +195,7 @@ suite('Component tests', (): void => {
       });
     });
     test('can be used to obtain the current variant.', async (): Promise<void> => {
-      const { GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
+      const { GlobalThemeProvider, useTheme } = createGlobalTheme(configuration);
 
       const Dummy: FunctionComponent = () => {
         const { variant } = useTheme();
@@ -222,7 +222,7 @@ suite('Component tests', (): void => {
       });
     });
     test('can be used to access the global theme.', async (): Promise<void> => {
-      const { GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
+      const { GlobalThemeProvider, useTheme } = createGlobalTheme(configuration);
 
       const Dummy: FunctionComponent = () => {
         const { globalTheme } = useTheme();
@@ -251,7 +251,7 @@ suite('Component tests', (): void => {
   });
   suite('createLocalTheme', (): void => {
     test('the theme factory can be a function with arbitrary logic.', async (): Promise<void> => {
-      const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+      const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
       const { from } = createLocalTheme({
         globalThemeContext,
         factory ({ globalTheme, variant }) {
@@ -294,7 +294,7 @@ suite('Component tests', (): void => {
     });
     suite('from function', (): void => {
       test('allows access to values in the local theme.', async (): Promise<void> => {
-        const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+        const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
         const { from } = createLocalTheme({
           globalThemeContext,
           factory ({ globalTheme, variant }) {
@@ -336,7 +336,7 @@ suite('Component tests', (): void => {
         });
       });
       test('allows access to functions in the local theme.', async (): Promise<void> => {
-        const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
+        const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
         const { from } = createLocalTheme({
           globalThemeContext,
           factory ({ globalTheme, variant }) {

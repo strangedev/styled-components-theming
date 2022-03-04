@@ -1,7 +1,7 @@
 import { GlobalThemeContext } from './GlobalThemeContext';
 import React, { Context, FunctionComponent, useContext, useState } from 'react';
 
-const createGlobalThemeProvider = function <TVariants extends string, TGlobalTheme> ({
+const createGlobalTheme = function <TVariants extends string, TGlobalTheme> ({
   globalThemes,
   defaultVariant
 }: {
@@ -45,5 +45,5 @@ const createGlobalThemeProvider = function <TVariants extends string, TGlobalThe
 };
 
 export {
-  createGlobalThemeProvider
+  createGlobalTheme
 };
