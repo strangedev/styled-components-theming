@@ -1,5 +1,5 @@
 interface ThemeFactoryArgs<TVariants, TGlobalTheme> {
-  theme: TGlobalTheme;
+  globalTheme: TGlobalTheme;
   variant: TVariants;
 }
 

@@ -74,7 +74,7 @@ these.
 
 ```tsx
 const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalThemeProvider({
-  themes: {
+  globalThemes: {
     dark: {
       space: (units: number): string => `${units * 4}px`,
       brandColor: '#a5e',
@@ -143,9 +143,9 @@ import { globalThemeContext } from './style/GlobalThemeProvider';
 
 const { from } = createLocalTheme({
   globalThemeContext,
-  factory ({ theme, variant }) {
-    const { brandColor, background } = theme;
-    let { color } = theme;
+  factory ({ globalTheme, variant }) {
+    const { brandColor, background } = globalTheme;
+    let { color } = globalTheme;
 
     if (variant === 'light') {
       color = background;
@@ -154,14 +154,14 @@ const { from } = createLocalTheme({
     return {
       color,
       background: brandColor,
-      padding: theme.space(2)
+      padding: globalTheme.space(2)
     };
   }
 });
 ```
 
-The `factory` parameter is a function that receives the current theme and the
-name of the current variant and returns the local theme. The local theme can
+The `factory` parameter is a function that receives the current global theme and
+the name of the current variant and returns the local theme. The local theme can
 be an arbitrary object as well, but as a general rule it is best that the values
 are all either strings or have a `toString` method.
 
@@ -195,7 +195,7 @@ const ThemeSwitch: FunctionComponent = () => {
   const {
     availableVariants,
     variant,
-    theme,
+    globalTheme,
     switchVariant
   } = useTheme();
 

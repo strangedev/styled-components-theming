@@ -6,7 +6,7 @@ import { Length, px } from '@nhummel/css-in-js';
 import React, { FunctionComponent } from 'react';
 
 const configuration = {
-  themes: {
+  globalThemes: {
     dark: {
       space: (units: number): Length => Length.new(units * 4, px),
       brandColor: '#a5e',
@@ -33,9 +33,9 @@ suite('Component tests', (): void => {
     const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
     const { from: fromOne } = createLocalTheme({
       globalThemeContext,
-      factory ({ theme, variant }) {
-        const { brandColor, background } = theme;
-        let { color } = theme;
+      factory ({ globalTheme, variant }) {
+        const { brandColor, background } = globalTheme;
+        let { color } = globalTheme;
 
         if (variant === 'light') {
           color = background;
@@ -44,7 +44,7 @@ suite('Component tests', (): void => {
         return {
           color,
           background: brandColor,
-          padding: theme.space(2)
+          padding: globalTheme.space(2)
         };
       }
     });
@@ -57,9 +57,9 @@ suite('Component tests', (): void => {
 
     const { from: fromTwo } = createLocalTheme({
       globalThemeContext,
-      factory ({ theme }) {
+      factory ({ globalTheme }) {
         return {
-          marginLeft: theme.space(16)
+          marginLeft: globalTheme.space(16)
         };
       }
     });
@@ -95,9 +95,9 @@ suite('Component tests', (): void => {
       const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
       const { from } = createLocalTheme({
         globalThemeContext,
-        factory ({ theme, variant }) {
-          const { brandColor, background } = theme;
-          let { color } = theme;
+        factory ({ globalTheme, variant }) {
+          const { brandColor, background } = globalTheme;
+          let { color } = globalTheme;
 
           if (variant === 'light') {
             color = background;
@@ -106,7 +106,7 @@ suite('Component tests', (): void => {
           return {
             color,
             background: brandColor,
-            padding: theme.space(2)
+            padding: globalTheme.space(2)
           };
         }
       });
@@ -225,12 +225,12 @@ suite('Component tests', (): void => {
       const { GlobalThemeProvider, useTheme } = createGlobalThemeProvider(configuration);
 
       const Dummy: FunctionComponent = () => {
-        const { theme } = useTheme();
+        const { globalTheme } = useTheme();
 
         return (
           <div
             data-testid='value'
-            data-theme={ JSON.stringify(theme) }
+            data-theme={ JSON.stringify(globalTheme) }
           />
         );
       };
@@ -245,7 +245,7 @@ suite('Component tests', (): void => {
         const dummy = await screen.findByTestId('value');
         const actual = dummy.dataset.theme;
 
-        assert.that(actual).is.equalTo(JSON.stringify(configuration.themes[configuration.defaultVariant]));
+        assert.that(actual).is.equalTo(JSON.stringify(configuration.globalThemes[configuration.defaultVariant]));
       });
     });
   });
@@ -254,9 +254,9 @@ suite('Component tests', (): void => {
       const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
       const { from } = createLocalTheme({
         globalThemeContext,
-        factory ({ theme, variant }) {
-          const { brandColor, background } = theme;
-          let { color } = theme;
+        factory ({ globalTheme, variant }) {
+          const { brandColor, background } = globalTheme;
+          let { color } = globalTheme;
 
           if (variant === 'light') {
             color = background;
@@ -265,7 +265,7 @@ suite('Component tests', (): void => {
           return {
             color,
             background: brandColor,
-            padding: theme.space(2)
+            padding: globalTheme.space(2)
           };
         }
       });
@@ -292,14 +292,14 @@ suite('Component tests', (): void => {
         assert.that(bannerStyle.padding).is.equalTo('8px');
       });
     });
-    suite('get function', (): void => {
+    suite('from function', (): void => {
       test('allows access to values in the local theme.', async (): Promise<void> => {
         const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
         const { from } = createLocalTheme({
           globalThemeContext,
-          factory ({ theme, variant }) {
-            const { brandColor, background } = theme;
-            let { color } = theme;
+          factory ({ globalTheme, variant }) {
+            const { brandColor, background } = globalTheme;
+            let { color } = globalTheme;
 
             if (variant === 'light') {
               color = background;
@@ -308,7 +308,7 @@ suite('Component tests', (): void => {
             return {
               color,
               background: brandColor,
-              padding: theme.space(2)
+              padding: globalTheme.space(2)
             };
           }
         });
@@ -339,9 +339,9 @@ suite('Component tests', (): void => {
         const { globalThemeContext, GlobalThemeProvider } = createGlobalThemeProvider(configuration);
         const { from } = createLocalTheme({
           globalThemeContext,
-          factory ({ theme, variant }) {
-            const { brandColor, background, space } = theme;
-            let { color } = theme;
+          factory ({ globalTheme, variant }) {
+            const { brandColor, background, space } = globalTheme;
+            let { color } = globalTheme;
 
             if (variant === 'light') {
               color = background;

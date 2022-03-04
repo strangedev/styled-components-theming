@@ -1,11 +1,11 @@
-import { getGlobalThemeContext, GlobalThemeContext } from './GlobalThemeContext';
+import { GlobalThemeContext } from './GlobalThemeContext';
 import React, { Context, FunctionComponent, useContext, useState } from 'react';
 
 const createGlobalThemeProvider = function <TVariants extends string, TGlobalTheme> ({
-  themes,
+  globalThemes,
   defaultVariant
 }: {
-  themes: Record<TVariants, TGlobalTheme>;
+  globalThemes: Record<TVariants, TGlobalTheme>;
   variants: readonly TVariants[];
   defaultVariant: TVariants;
 }): {
@@ -13,17 +13,17 @@ const createGlobalThemeProvider = function <TVariants extends string, TGlobalThe
     globalThemeContext: Context<GlobalThemeContext<TVariants, TGlobalTheme>>;
     useTheme: () => GlobalThemeContext<TVariants, TGlobalTheme>;
   } {
-  const globalThemeContext = getGlobalThemeContext({ themes, defaultVariant });
+  const globalThemeContext = React.createContext<GlobalThemeContext<TVariants, TGlobalTheme>>({} as any);
 
   const GlobalThemeProvider: FunctionComponent = ({ children }) => {
     const [ value, setValue ] = useState<GlobalThemeContext<TVariants, TGlobalTheme>>({
-      theme: themes[defaultVariant],
+      globalTheme: globalThemes[defaultVariant],
       variant: defaultVariant,
-      availableVariants: Object.keys(themes) as TVariants[],
+      availableVariants: Object.keys(globalThemes) as TVariants[],
       switchVariant (variant: TVariants): void {
         setValue({
           ...value,
-          theme: themes[variant],
+          globalTheme: globalThemes[variant],
           variant
         });
       }
