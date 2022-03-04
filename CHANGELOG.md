@@ -1,3 +1,20 @@
+# [3.0.0](https://github.com/strangedev/styled-components-theming/compare/2.0.0...3.0.0) (2022-03-04)
+
+
+### Features
+
+* pass context implicitly to createLocalTheme ([#4](https://github.com/strangedev/styled-components-theming/issues/4)) ([edda026](https://github.com/strangedev/styled-components-theming/commit/edda026c1373599d577284209cd23af715a1e822))
+
+
+### BREAKING CHANGES
+
+* `createLocalTheme` is not exported anymore and can be
+obtained from `createGlobalTheme`.
+* `createLocalTheme` only receives the factory now, you
+don't need to pass the `globalThemeContext` anymore.
+* `createGlobalTheme` does not return the
+`globalThemeContext` anymore.
+
 # [2.0.0](https://github.com/strangedev/styled-components-theming/compare/1.1.0...2.0.0) (2022-03-04)
 
 
