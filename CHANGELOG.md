@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/strangedev/styled-components-theming/compare/1.0.1...1.1.0) (2022-03-04)
+
+
+### Features
+
+* release ([4897f77](https://github.com/strangedev/styled-components-theming/commit/4897f7754e05034acd1a2bae8f5422613f6298e6))
+
 ## [1.0.1](https://github.com/strangedev/styled-components-theming/compare/1.0.0...1.0.1) (2022-03-04)
 
 
