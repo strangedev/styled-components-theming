@@ -73,7 +73,7 @@ different values. You can implement a dark mode, or re-skin your application wit
 these.
 
 ```tsx
-const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalTheme({
+const { createLocalTheme, GlobalThemeProvider, useTheme } = createGlobalTheme({
   globalThemes: {
     dark: {
       space: (units: number): string => `${units * 4}px`,
@@ -93,7 +93,7 @@ const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalTheme(
 });
 
 export {
-  globalThemeContext,
+  createLocalTheme,
   GlobalThemeProvider,
   useTheme
 };
@@ -135,15 +135,12 @@ export default App;
 ### Create component-level themes
 
 You can now use `createLocalTheme` to create isolated component-level themes.
-To do that, you'll need to pass the `globalThemeContext` obtained from
-`createGlobalTheme`.
 
 ```tsx
 import { globalThemeContext } from './style/GlobalThemeProvider';
 
-const { from } = createLocalTheme({
-  globalThemeContext,
-  factory ({ globalTheme, variant }) {
+const { from } = createLocalTheme(
+  ({ globalTheme, variant }) => {
     const { brandColor, background } = globalTheme;
     let { color } = globalTheme;
 
@@ -157,17 +154,17 @@ const { from } = createLocalTheme({
       padding: globalTheme.space(2)
     };
   }
-});
+);
 ```
 
-The `factory` parameter is a function that receives the current global theme and
+The first parameter is a factory that receives the current global theme and
 the name of the current variant and returns the local theme. The local theme can
 be an arbitrary object as well, but as a general rule it is best that the values
 are all either strings or have a `toString` method.
 
-Note that you can execute logic in the `factory` and make decisions based on the
+Note that you can execute logic in the factory and make decisions based on the
 `variant`. While only the theme corresponding to the `variant` is passed to the
-`factory`, in some cases, you might want to switch things around.
+factory, in some cases, you might want to switch things around.
 
 ### Using the local theme
 

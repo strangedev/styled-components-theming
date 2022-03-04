@@ -1,7 +1,7 @@
 import { assert } from 'assertthat';
+import { createGlobalTheme } from '../../lib';
 import styled from 'styled-components';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
-import { createGlobalTheme, createLocalTheme } from '../../lib';
 import { Length, px } from '@nhummel/css-in-js';
 import React, { FunctionComponent } from 'react';
 
@@ -30,10 +30,9 @@ suite('Component tests', (): void => {
   });
 
   test('styles styled-components isolated from each other.', async (): Promise<void> => {
-    const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
-    const { from: fromOne } = createLocalTheme({
-      globalThemeContext,
-      factory ({ globalTheme, variant }) {
+    const { GlobalThemeProvider, createLocalTheme } = createGlobalTheme(configuration);
+    const { from: fromOne } = createLocalTheme(
+      ({ globalTheme, variant }) => {
         const { brandColor, background } = globalTheme;
         let { color } = globalTheme;
 
@@ -47,7 +46,7 @@ suite('Component tests', (): void => {
           padding: globalTheme.space(2)
         };
       }
-    });
+    );
 
     const Banner = styled.div`
       color: ${fromOne(theme => theme.color)};
@@ -55,14 +54,11 @@ suite('Component tests', (): void => {
       padding: ${fromOne(theme => theme.padding)};
     `;
 
-    const { from: fromTwo } = createLocalTheme({
-      globalThemeContext,
-      factory ({ globalTheme }) {
-        return {
-          marginLeft: globalTheme.space(16)
-        };
-      }
-    });
+    const { from: fromTwo } = createLocalTheme(
+      ({ globalTheme }) => ({
+        marginLeft: globalTheme.space(16)
+      })
+    );
 
     const Logo = styled.div`
       margin-left: ${fromTwo(theme => theme.marginLeft)};
@@ -92,10 +88,9 @@ suite('Component tests', (): void => {
   });
   suite('useTheme hook', (): void => {
     test('can be used to switch the variant, re-rendering the component.', async (): Promise<void> => {
-      const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalTheme(configuration);
-      const { from } = createLocalTheme({
-        globalThemeContext,
-        factory ({ globalTheme, variant }) {
+      const { createLocalTheme, GlobalThemeProvider, useTheme } = createGlobalTheme(configuration);
+      const { from } = createLocalTheme(
+        ({ globalTheme, variant }) => {
           const { brandColor, background } = globalTheme;
           let { color } = globalTheme;
 
@@ -109,7 +104,7 @@ suite('Component tests', (): void => {
             padding: globalTheme.space(2)
           };
         }
-      });
+      );
 
       const Banner = styled.div`
         color: ${from(theme => theme.color)};
@@ -251,10 +246,9 @@ suite('Component tests', (): void => {
   });
   suite('createLocalTheme', (): void => {
     test('the theme factory can be a function with arbitrary logic.', async (): Promise<void> => {
-      const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
-      const { from } = createLocalTheme({
-        globalThemeContext,
-        factory ({ globalTheme, variant }) {
+      const { GlobalThemeProvider, createLocalTheme } = createGlobalTheme(configuration);
+      const { from } = createLocalTheme(
+        ({ globalTheme, variant }) => {
           const { brandColor, background } = globalTheme;
           let { color } = globalTheme;
 
@@ -268,7 +262,7 @@ suite('Component tests', (): void => {
             padding: globalTheme.space(2)
           };
         }
-      });
+      );
 
       const Banner = styled.div`
         color: ${from(theme => theme.color)};
@@ -294,10 +288,9 @@ suite('Component tests', (): void => {
     });
     suite('from function', (): void => {
       test('allows access to values in the local theme.', async (): Promise<void> => {
-        const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
-        const { from } = createLocalTheme({
-          globalThemeContext,
-          factory ({ globalTheme, variant }) {
+        const { GlobalThemeProvider, createLocalTheme } = createGlobalTheme(configuration);
+        const { from } = createLocalTheme(
+          ({ globalTheme, variant }) => {
             const { brandColor, background } = globalTheme;
             let { color } = globalTheme;
 
@@ -311,7 +304,7 @@ suite('Component tests', (): void => {
               padding: globalTheme.space(2)
             };
           }
-        });
+        );
 
         const Banner = styled.div`
           color: ${from(theme => theme.color)};
@@ -336,10 +329,9 @@ suite('Component tests', (): void => {
         });
       });
       test('allows access to functions in the local theme.', async (): Promise<void> => {
-        const { globalThemeContext, GlobalThemeProvider } = createGlobalTheme(configuration);
-        const { from } = createLocalTheme({
-          globalThemeContext,
-          factory ({ globalTheme, variant }) {
+        const { GlobalThemeProvider, createLocalTheme } = createGlobalTheme(configuration);
+        const { from } = createLocalTheme(
+          ({ globalTheme, variant }) => {
             const { brandColor, background, space } = globalTheme;
             let { color } = globalTheme;
 
@@ -353,7 +345,7 @@ suite('Component tests', (): void => {
               padding: space
             };
           }
-        });
+        );
 
         const Banner = styled.div`
           color: ${from(theme => theme.color)};
