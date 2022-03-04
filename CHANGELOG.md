@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/strangedev/styled-components-theming/compare/1.1.0...2.0.0) (2022-03-04)
+
+
+### Bug Fixes
+
+* breaking release ([11dca4e](https://github.com/strangedev/styled-components-theming/commit/11dca4e7bea9be8f50df4ad871bcf4076785b8e2))
+
+
+### BREAKING CHANGES
+
+* To better distinguish between global and component level themes which were previously both called `theme`, the theme obtained by `useTheme` and passed to the `factory` parameter of `createLocalTheme` is now called `globalTheme`.
+* Since `createGlobalThemeProvider` returns more than just a context provider and to harmonize the naming with `createLocalTheme`, `createGlobalThemeProvider` was renamed to `createGlobalTheme`.
+* The themes parameters of `createGlobalTheme` was renamed to `globalThemes`.
+
 # [1.1.0](https://github.com/strangedev/styled-components-theming/compare/1.0.1...1.1.0) (2022-03-04)
 
 
