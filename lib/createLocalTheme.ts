@@ -22,10 +22,10 @@ const createLocalTheme = function <TLocalTheme extends object, TGlobalThemeConte
   let renderedForVariant: InferVariants<TGlobalThemeContext> | null = null;
 
   const getLocalTheme = (): TLocalTheme => {
-    const { theme, variant } = useContext(globalThemeContext);
+    const { globalTheme, variant } = useContext(globalThemeContext);
 
     if (!localTheme || variant !== renderedForVariant) {
-      localTheme = factory({ theme, variant });
+      localTheme = factory({ globalTheme, variant });
       renderedForVariant = variant;
     }
 

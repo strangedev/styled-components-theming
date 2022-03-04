@@ -4,11 +4,11 @@ Application-wide theming with component-level isolation for styled-components.
 
 ## Status
 
-| Category         | Status                                                                                                      |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| Version          | [![npm](https://img.shields.io/npm/v/@nhummel/styled-components-theming)](https://www.npmjs.com/package/@nhummel/styled-components-theming)     |
-| Build            | ![GitHub Actions](https://github.com/strangedev/styled-components-theming/workflows/Release/badge.svg?branch=main) |
-| License          | ![GitHub](https://img.shields.io/github/license/strangedev/styled-components-theming)                              |
+| Category | Status                                                                                                                                      |
+|----------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| Version  | [![npm](https://img.shields.io/npm/v/@nhummel/styled-components-theming)](https://www.npmjs.com/package/@nhummel/styled-components-theming) |
+| Build    | ![GitHub Actions](https://github.com/strangedev/styled-components-theming/workflows/Release/badge.svg?branch=main)                          |
+| License  | ![GitHub](https://img.shields.io/github/license/strangedev/styled-components-theming)                                                       |
 
 ## Introduction
 
@@ -73,8 +73,8 @@ different values. You can implement a dark mode, or re-skin your application wit
 these.
 
 ```tsx
-const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalThemeProvider({
-  themes: {
+const { globalThemeContext, GlobalThemeProvider, useTheme } = createGlobalTheme({
+  globalThemes: {
     dark: {
       space: (units: number): string => `${units * 4}px`,
       brandColor: '#a5e',
@@ -110,7 +110,7 @@ correctly.
 
 ### Add the `GlobalThemeProvider` to your application
 
-In the example above, you can see that `createGlobalThemeProvider` returns a
+In the example above, you can see that `createGlobalTheme` returns a
 React component `GlobalThemeProvider`. You need to add this context provider to
 your application somewhere high up in the tree. All components using local themes
 must be below it.
@@ -136,16 +136,16 @@ export default App;
 
 You can now use `createLocalTheme` to create isolated component-level themes.
 To do that, you'll need to pass the `globalThemeContext` obtained from
-`createGlobalThemeProvider`.
+`createGlobalTheme`.
 
 ```tsx
 import { globalThemeContext } from './style/GlobalThemeProvider';
 
 const { from } = createLocalTheme({
   globalThemeContext,
-  factory ({ theme, variant }) {
-    const { brandColor, background } = theme;
-    let { color } = theme;
+  factory ({ globalTheme, variant }) {
+    const { brandColor, background } = globalTheme;
+    let { color } = globalTheme;
 
     if (variant === 'light') {
       color = background;
@@ -154,14 +154,14 @@ const { from } = createLocalTheme({
     return {
       color,
       background: brandColor,
-      padding: theme.space(2)
+      padding: globalTheme.space(2)
     };
   }
 });
 ```
 
-The `factory` parameter is a function that receives the current theme and the
-name of the current variant and returns the local theme. The local theme can
+The `factory` parameter is a function that receives the current global theme and
+the name of the current variant and returns the local theme. The local theme can
 be an arbitrary object as well, but as a general rule it is best that the values
 are all either strings or have a `toString` method.
 
@@ -186,7 +186,7 @@ The `from` function receives the local theme as its only argument.
 
 ### Switching between variants & `useTheme`
 
-The call to `createGlobalThemeProvider` also returns a hook called `useTheme`.
+The call to `createGlobalTheme` also returns a hook called `useTheme`.
 This hook can be used to obtain information about variants, access the global theme
 directly, or switch the current variant.
 
@@ -195,7 +195,7 @@ const ThemeSwitch: FunctionComponent = () => {
   const {
     availableVariants,
     variant,
-    theme,
+    globalTheme,
     switchVariant
   } = useTheme();
 
