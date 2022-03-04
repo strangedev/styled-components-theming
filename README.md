@@ -139,7 +139,7 @@ You can now use `createLocalTheme` to create isolated component-level themes.
 ```tsx
 import { globalThemeContext } from './style/GlobalThemeProvider';
 
-const { from } = createLocalTheme(
+const { from, get } = createLocalTheme(
   ({ globalTheme, variant }) => {
     const { brandColor, background } = globalTheme;
     let { color } = globalTheme;
@@ -180,6 +180,30 @@ const Banner = styled.div`
 ```
 
 The `from` function receives the local theme as its only argument.
+
+_Note_: The `from` function call **must** be the only value in the interpolation.
+It can't be wrapped in another function. This won't work:
+
+```tsx
+const Headline = styled.span<{ level: number }>`
+  font-size: ${({ level }) => from(theme => theme.size(level))};
+`;
+```
+
+If you need to use the local theme inside a function, use the `get` function.
+
+### Using component props
+
+The `from` function provides a nice shorthand if you just want to access parts of
+the local theme. It can't be used inside a function though. If you need to access
+component props, you can use the `get` function returned by `createLocalTheme`.
+
+```tsx
+const Button = styled.button<{ inverted: boolean }>`
+  background-color: ${props => props.inverted ? get(theme => theme.backgroundColor.inverted) : get(theme => theme.backgroundColor.normal)};
+  color: ${props => props.inverted ? get(theme => theme.color.inverted) : get(theme => theme.color.normal)};
+`;
+```
 
 ### Switching between variants & `useTheme`
 

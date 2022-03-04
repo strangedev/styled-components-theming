@@ -370,5 +370,55 @@ suite('Component tests', (): void => {
         });
       });
     });
+    suite('get function', (): void => {
+      test('is equivalent to from() but can be used as a value.', async (): Promise<void> => {
+        const { GlobalThemeProvider, createLocalTheme } = createGlobalTheme(configuration);
+        const { from, get } = createLocalTheme(
+          ({ globalTheme, variant }) => {
+            const { brandColor, background, space } = globalTheme;
+            let { color } = globalTheme;
+
+            if (variant === 'light') {
+              color = background;
+            }
+
+            return {
+              color,
+              background: brandColor,
+              padding: space
+            };
+          }
+        );
+
+        const BannerFrom = styled.div`
+          color: ${from(theme => theme.color)};
+          background-color: ${from(theme => theme.background)};
+          padding: ${from(theme => theme.padding(3))};
+        `;
+
+        const BannerGet = styled.div`
+          color: ${(): string => get(theme => theme.color)};
+          background-color: ${(): string => get(theme => theme.background)};
+          padding: ${(): string => get(theme => theme.padding(3))};
+        `;
+
+        render((
+          <GlobalThemeProvider>
+            <BannerFrom data-testid='bannerFrom'>Yes yes</BannerFrom>
+            <BannerGet data-testid='bannerGet'>Yes yes</BannerGet>
+          </GlobalThemeProvider>
+        ));
+
+        await waitFor(async () => {
+          const bannerFrom = await screen.findByTestId('bannerFrom');
+          const bannerGet = await screen.findByTestId('bannerGet');
+
+          const bannerFromStyle = window.getComputedStyle(bannerFrom);
+          const bannerGetStyle = window.getComputedStyle(bannerGet);
+
+          assert.that(bannerFromStyle).is.equalTo(bannerGetStyle);
+        });
+      });
+    });
   });
 });
