@@ -6,7 +6,7 @@ export default function (): void {
       <head></head>
       <body></body>
     </html>
-  `);
+  `, { runScripts: 'dangerously' });
   const { window } = jsdom;
 
   (global as any).window = window;
