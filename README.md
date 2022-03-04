@@ -73,7 +73,14 @@ different values. You can implement a dark mode, or re-skin your application wit
 these.
 
 ```tsx
-const { createLocalTheme, GlobalThemeProvider, useTheme } = createGlobalTheme({
+// style/globalTheme.ts
+
+const {
+  createGlobalStyle,
+  createLocalTheme,
+  GlobalThemeProvider,
+  useTheme
+} = createGlobalTheme({
   globalThemes: {
     dark: {
       space: (units: number): string => `${units * 4}px`,
@@ -93,6 +100,7 @@ const { createLocalTheme, GlobalThemeProvider, useTheme } = createGlobalTheme({
 });
 
 export {
+  createGlobalStyle,
   createLocalTheme,
   GlobalThemeProvider,
   useTheme
@@ -116,7 +124,7 @@ your application somewhere high up in the tree. All components using local theme
 must be below it.
 
 ```tsx
-import { GlobalThemeProvider } from './style/GlobalThemeProvider';
+import { GlobalThemeProvider } from './style/globalTheme';
 
 const App: FunctionComponent<AppProps> = function ({
   Component,
@@ -137,7 +145,7 @@ export default App;
 You can now use `createLocalTheme` to create isolated component-level themes.
 
 ```tsx
-import { globalThemeContext } from './style/GlobalThemeProvider';
+import { globalThemeContext } from './style/globalTheme';
 
 const { from, get } = createLocalTheme(
   ({ globalTheme, variant }) => {
@@ -172,10 +180,15 @@ The `createLocalTheme` function returns a function called `from`.
 You can use this function to reference the local theme in styled components:
 
 ```tsx
+import { createLocalTheme } from './style/globalTheme';
+
+const { from } = createLocalTheme(({ globalTheme }) => {/* ... */
+})
+
 const Banner = styled.div`
-  color: ${from(theme => theme.color)};
-  background-color: ${from(theme => theme.background)};
-  padding: ${from(theme => theme.padding)};
+  color: ${ from(theme => theme.color) };
+  background-color: ${ from(theme => theme.background) };
+  padding: ${ from(theme => theme.padding) };
 `;
 ```
 
@@ -199,6 +212,11 @@ the local theme. It can't be used inside a function though. If you need to acces
 component props, you can use the `get` function returned by `createLocalTheme`.
 
 ```tsx
+import { createLocalTheme } from './style/globalTheme';
+
+const { get } = createLocalTheme(({ globalTheme }) => {/* ... */
+})
+
 const Button = styled.button<{ inverted: boolean }>`
   background-color: ${props => props.inverted ? get(theme => theme.backgroundColor.inverted) : get(theme => theme.backgroundColor.normal)};
   color: ${props => props.inverted ? get(theme => theme.color.inverted) : get(theme => theme.color.normal)};
@@ -212,6 +230,8 @@ This hook can be used to obtain information about variants, access the global th
 directly, or switch the current variant.
 
 ```tsx
+import { useTheme } from './style/globalTheme';
+
 const ThemeSwitch: FunctionComponent = () => {
   const {
     availableVariants,
@@ -230,6 +250,47 @@ const ThemeSwitch: FunctionComponent = () => {
     </button>
   );
 };
+```
+
+### Creating global styles with `createGlobalStyle`
+
+styled-components provides a utility function for inserting global CSS rules
+called `createGlobalStyle`. While you can still use this utility unimpeded by
+this library, you may want to access the global theme from these global styles.
+
+To achieve this, use the `createGlobalStyle` function returned from
+`createGlobalTheme`. You can use the resulting component anywhere in your app,
+below the `GlobalThemeProvider`.
+
+```tsx
+import { createGlobalStyle, GlobalThemeProvider } from './style/globalTheme';
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Dosis', sans-serif;
+    font-size: ${({ globalTheme }): string => globalTheme.fontSize};
+    background-color: ${({ globalTheme }): string => globalTheme.backgroundColor};
+    color: ${({ globalTheme }): string => globalTheme.color};
+  }
+`;
+
+const App: FunctionComponent<AppProps> = function ({
+  Component,
+  pageProps
+}): ReactElement {
+  return (
+    <GlobalThemeProvider>
+      <GlobalStyle />
+      <Component { ...pageProps } />
+    </GlobalThemeProvider>
+  );
+};
+
+export default App;
 ```
 
 ## Contributing

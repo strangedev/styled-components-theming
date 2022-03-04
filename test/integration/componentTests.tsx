@@ -1,5 +1,6 @@
 import { assert } from 'assertthat';
 import { createGlobalTheme } from '../../lib';
+import reset from 'styled-reset';
 import styled from 'styled-components';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { Length, px } from '@nhummel/css-in-js';
@@ -418,6 +419,60 @@ suite('Component tests', (): void => {
 
           assert.that(bannerFromStyle).is.equalTo(bannerGetStyle);
         });
+      });
+    });
+  });
+  suite('createGlobalStyle', (): void => {
+    test('has access to the global theme.', async (): Promise<void> => {
+      const { GlobalThemeProvider, createGlobalStyle } = createGlobalTheme(configuration);
+
+      const GlobalStyle = createGlobalStyle`
+        .target {
+          background-color: ${({ globalTheme }): string => globalTheme.background};
+          box-sizing: border-box;
+        }
+      `;
+
+      render((
+        <GlobalThemeProvider>
+          <GlobalStyle />
+          <span className='target' data-testid='target'>dummy</span>
+        </GlobalThemeProvider>
+      ));
+
+      await waitFor(async () => {
+        const target = await screen.findByTestId('target');
+        const style = window.getComputedStyle(target);
+
+        assert.that(style.backgroundColor).is.equalTo('rgb(34, 34, 34)');
+        assert.that(style.boxSizing).is.equalTo('border-box');
+      });
+    });
+    test('accepts regular styled-components type interpolations.', async (): Promise<void> => {
+      const { GlobalThemeProvider, createGlobalStyle } = createGlobalTheme(configuration);
+
+      const GlobalStyle = createGlobalStyle`
+        ${reset}
+        
+        .target {
+          background-color: ${({ globalTheme }): string => globalTheme.background};
+          box-sizing: border-box;
+        }
+      `;
+
+      render((
+        <GlobalThemeProvider>
+          <GlobalStyle />
+          <span className='target' data-testid='target'>dummy</span>
+        </GlobalThemeProvider>
+      ));
+
+      await waitFor(async () => {
+        const target = await screen.findByTestId('target');
+        const style = window.getComputedStyle(target);
+
+        assert.that(style.backgroundColor).is.equalTo('rgb(34, 34, 34)');
+        assert.that(style.boxSizing).is.equalTo('border-box');
       });
     });
   });

@@ -1,5 +1,6 @@
 import { GlobalThemeContext } from './GlobalThemeContext';
-import { CreateLocalTheme, getCreateLocalTheme } from './createLocalTheme';
+import { CreateGlobalStyle, getCreateGlobalStyle } from './getCreateGlobalStyle';
+import { CreateLocalTheme, getCreateLocalTheme } from './getCreateLocalTheme';
 import React, { FunctionComponent, useContext, useState } from 'react';
 
 const createGlobalTheme = function <TVariants extends string, TGlobalTheme> ({
@@ -13,9 +14,12 @@ const createGlobalTheme = function <TVariants extends string, TGlobalTheme> ({
     GlobalThemeProvider: FunctionComponent;
     useTheme: () => GlobalThemeContext<TVariants, TGlobalTheme>;
     createLocalTheme: CreateLocalTheme<TVariants, TGlobalTheme>;
+    createGlobalStyle: CreateGlobalStyle<TGlobalTheme>;
   } {
   const globalThemeContext = React.createContext<GlobalThemeContext<TVariants, TGlobalTheme>>({} as any);
   const createLocalTheme = getCreateLocalTheme(globalThemeContext);
+  const useTheme = (): GlobalThemeContext<TVariants, TGlobalTheme> => useContext(globalThemeContext);
+  const createGlobalStyle = getCreateGlobalStyle(useTheme);
 
   const GlobalThemeProvider: FunctionComponent = ({ children }) => {
     const [ value, setValue ] = useState<GlobalThemeContext<TVariants, TGlobalTheme>>({
@@ -41,8 +45,9 @@ const createGlobalTheme = function <TVariants extends string, TGlobalTheme> ({
 
   return {
     GlobalThemeProvider,
-    useTheme: (): GlobalThemeContext<TVariants, TGlobalTheme> => useContext(globalThemeContext),
-    createLocalTheme
+    useTheme,
+    createLocalTheme,
+    createGlobalStyle
   };
 };
 
