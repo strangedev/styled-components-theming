@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/strangedev/styled-components-theming/compare/3.0.0...3.1.0) (2022-03-04)
+
+
+### Features
+
+* add get function ([#5](https://github.com/strangedev/styled-components-theming/issues/5)) ([f416697](https://github.com/strangedev/styled-components-theming/commit/f416697fe7cc45433710fee5f31815777ae49892))
+
 # [3.0.0](https://github.com/strangedev/styled-components-theming/compare/2.0.0...3.0.0) (2022-03-04)
 
 
