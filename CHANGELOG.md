@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/strangedev/styled-components-theming/compare/3.2.0...3.2.1) (2022-05-09)
+
+
+### Bug Fixes
+
+* bump @nhummel/css-in-js from 1.3.0 to 1.3.1 ([#22](https://github.com/strangedev/styled-components-theming/issues/22)) ([60f524a](https://github.com/strangedev/styled-components-theming/commit/60f524aeccc604882a135afb9a9375431c463802))
+
 # [3.2.0](https://github.com/strangedev/styled-components-theming/compare/3.1.0...3.2.0) (2022-03-04)
 
 
